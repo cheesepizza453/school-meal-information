@@ -7,6 +7,7 @@ import subTitle1 from "./img/search_title1.png";
 import subTitle2 from "./img/search_title2.png";
 import btnText1 from "./img/search_btn1.png";
 import btnText2 from "./img/searh_btn2.png";
+import "./index.css";
 
 function SchoolInfo() {
   const selectCityRef = useRef(null);
@@ -119,7 +120,9 @@ function SchoolInfo() {
         `https://open.neis.go.kr/hub/mealServiceDietInfo?KEY=${process.env.REACT_APP_API_KEY}&Type=json&pIndex=1&pSize=100&ATPT_OFCDC_SC_CODE=B10&SD_SCHUL_CODE=${schoolNameCode}&MLSV_YMD=${searchDateString}`
       )
       .then((response) => {
-        response.data.hasOwnProperty("mealServiceDietInfo") && setMainData(response.data.mealServiceDietInfo[1].row);
+        response.data.hasOwnProperty("mealServiceDietInfo")
+          ? setMainData(response.data.mealServiceDietInfo[1].row)
+          : setMainData("검색 결과가 없습니다.");
       })
       .catch((error) => {
         console.log(error);
@@ -152,13 +155,26 @@ function SchoolInfo() {
           <div className="flex">
             <div className={`relative custom-select ${isCityOpen ? "open" : ""}`} ref={selectCityRef}>
               <div
-                className="flex justify-start items-center w-200 h-60 px-10 py-4 mr-10 bg-white rounded-10 border-solid border-[4px] border-gray-600"
+                className="relative flex justify-start items-center w-200 h-60 px-10 py-4 mr-10 bg-white rounded-10 border-solid border-[4px] border-gray-600"
                 onClick={handleToggleCityDropdown}
               >
                 {cityName || "지역을 선택해주세요."}
+                <span className="absolute right-[10px] top-[18px]">
+                  <svg
+                    className={`scale-75 ${!isCityOpen && `rotate-180`}`}
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="17px"
+                    height="17px"
+                  >
+                    <path
+                      fill="rgb(40, 40, 40)"
+                      d="M5.567,2.367 C6.672,0.155 9.828,0.155 10.933,2.367 L16.079,12.658 C17.077,14.653 15.626,17.000 13.396,17.000 L3.104,17.000 C0.874,17.000 -0.577,14.653 0.421,12.658 L5.567,2.367 Z"
+                    />
+                  </svg>
+                </span>
               </div>
               {isCityOpen && (
-                <ul className="absolute top-[50px] left-0 w-[calc(100%-10px)] h-300 bg-white mt-10 p-30 rounded-10 overflow-y-scroll  border-solid border-[4px] border-gray-[#f2f2f2] z-10">
+                <ul className="absolute top-[50px] left-0 w-[calc(100%-10px)] h-300 bg-white mt-10 py-15 px-30 rounded-10 overflow-y-scroll  border-solid border-[4px] border-[#e5e5e5] z-10">
                   {cityCode.map((item) => {
                     const cityName = Object.keys(item)[0];
                     const cityNameCode = item[cityName];
@@ -192,35 +208,36 @@ function SchoolInfo() {
             </button>
           </div>
           {/* 학교 검색 결과 */}
-          <div className="mt-60 ">
+          <div className="mt-30 ">
             <div className="flex items-center">
-              {/* {searchSchoolBtnClicked && typeof schoolData === "object" && (
-                <select
-                  className="w-820 h-60 ml-8 rounded-10 border-solid border-[4px] border-gray-600"
-                  name="job"
-                  onChange={handleSchoolSelect}
-                  value={schoolSelected}
-                >
-                  <option value="">{`학교를 선택해주세요.(${numberOfSchools})`}</option>
-                  {schoolData.map((item) => {
-                    return <option value={item.SD_SCHUL_CODE}>{item.SCHUL_NM}</option>;
-                  })}
-                </select>
-              )} */}
-
-              {/*  */}
               {searchSchoolBtnClicked && typeof schoolData === "object" && (
                 <div className={`relative custom-select ${isSchoolOpen ? "open" : ""}`} ref={selectSchoolRef}>
                   <div
-                    className="flex justify-start items-center w-800 h-60 px-10 py-4 mr-10 bg-white rounded-10 border-solid border-[4px] border-gray-600"
+                    className="relative flex justify-start items-center w-820 h-60 px-10 py-4 mr-10 bg-white rounded-10 border-solid border-[4px] border-gray-600"
                     onClick={handleToggleSchoolDropdown}
                   >
-                    {schoolData && !schoolName
+                    {/* 230703: 학교 이름을 선택하고 재검색하면 바뀌지 않음 ㅜㅜ */}
+                    {schoolName && schoolData.length === 0
                       ? `학교를 선택해주세요.(${numberOfSchools})`
-                      : schoolNameCode && schoolName && schoolName}
+                      : schoolName
+                      ? schoolName
+                      : `학교를 선택해주세요.(${numberOfSchools})`}
+                    <span className="absolute right-[10px] top-[18px]">
+                      <svg
+                        className={`scale-75 ${!isSchoolOpen && `rotate-180`}`}
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="17px"
+                        height="17px"
+                      >
+                        <path
+                          fill="rgb(40, 40, 40)"
+                          d="M5.567,2.367 C6.672,0.155 9.828,0.155 10.933,2.367 L16.079,12.658 C17.077,14.653 15.626,17.000 13.396,17.000 L3.104,17.000 C0.874,17.000 -0.577,14.653 0.421,12.658 L5.567,2.367 Z"
+                        />
+                      </svg>
+                    </span>
                   </div>
                   {isSchoolOpen && (
-                    <ul className="absolute top-[50px] left-0 w-[calc(100%-10px)] h-300 bg-white mt-10 p-30 rounded-10 overflow-y-scroll border-solid border-[4px] border-gray-[#f2f2f2] z-10">
+                    <ul className="absolute top-[50px] left-0 w-[calc(100%-10px)] h-300 bg-white mt-10 px-30 py-15 rounded-10 overflow-y-scroll border-solid border-[4px] border-[#e5e5e5] z-10">
                       {schoolData.map((item) => {
                         const schoolName = item.SCHUL_NM;
                         const schoolNameCode = item.SD_SCHUL_CODE;
@@ -239,7 +256,6 @@ function SchoolInfo() {
                   )}
                 </div>
               )}
-              {/*  */}
             </div>
           </div>
         </div>
@@ -252,6 +268,7 @@ function SchoolInfo() {
             selected={startDate}
             onChange={(date) => setStartDate(date)}
             dateFormat="yyyy-MM"
+            showMonthYearPicker
             customInput={<CustomDateInput />}
           />
         </div>
@@ -267,7 +284,7 @@ function SchoolInfo() {
         </div>
 
         {/* 급식정보 */}
-        <div className="flex flex-wrap justify-center">
+        <div className="flex flex-wrap justify-center mb-200">
           {typeof mainData === "object"
             ? mainData.map((item, index) => (
                 <div key={index} className="min-w-240 rounded-50 bg-[#f2f2f2] hover:bg-[#eee]  py-30 px-30 mx-10 mb-40">
