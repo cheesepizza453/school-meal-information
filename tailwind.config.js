@@ -20,6 +20,10 @@ module.exports = {
       fontSize: px0To64,
       borderRadius: px0To64,
     },
+    screens: {
+      mobile: { max: "980px" },
+    },
   },
+
   plugins: [],
 };

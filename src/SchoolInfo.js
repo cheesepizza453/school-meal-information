@@ -118,8 +118,6 @@ function SchoolInfo() {
 
       cityName.length !== 0 && schoolNameInput.length !== 0 && setSearchSchoolBtnClicked(true);
     }
-    // cityName === "" && setSearchSchoolBtnClicked(false);
-    // schoolNameInput.length === 0 && setSearchSchoolBtnClicked(false);
   };
 
   const onSchoolSearchKeyPress = (e) => {
@@ -164,16 +162,16 @@ function SchoolInfo() {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="w-[1280px]">
-        <div className="flex flex-col items-center rounded-50 p-120 bg-[#f2f2f2]">
-          <h2 className="mb-60">
-            <img src={subTitle1} alt="지역과 학교를 검색해주세요" />
+      <div className="w-[1280px] mobile:w-[90vw]">
+        <div className="flex flex-col items-center rounded-50 p-120 mobile:py-60 mobile:px-30 bg-[#f2f2f2]">
+          <h2 className="flex justify-center mb-60">
+            <img className="mobile:w-[80%]" src={subTitle1} alt="지역과 학교를 검색해주세요" />
           </h2>
           {/* 지역 선택 셀렉트박스 */}
-          <div className="flex">
+          <div className="flex mobile:flex-col mobile:w-[100%]">
             <div className={`relative custom-select ${isCityOpen ? "open" : ""}`} ref={selectCityRef}>
               <div
-                className="relative flex justify-start items-center w-200 h-60 px-10 py-4 mr-10 bg-white rounded-10 border-solid border-[4px] border-gray-600"
+                className="relative flex justify-start items-center w-200 mobile:w-[100%] h-60 px-10 py-4 mr-10 mobile:mb-20 bg-white rounded-10 border-solid border-[4px] border-gray-600"
                 onClick={handleToggleCityDropdown}
               >
                 {cityName || "지역을 선택해주세요."}
@@ -192,7 +190,7 @@ function SchoolInfo() {
                 </span>
               </div>
               {isCityOpen && (
-                <ul className="absolute top-[50px] left-0 w-[calc(100%-10px)] h-300 bg-white mt-10 py-15 px-30 rounded-10 overflow-y-scroll  border-solid border-[4px] border-[#e5e5e5] z-10">
+                <ul className="absolute top-[50px] left-0 w-[calc(100%-10px)] mobile:w-[100%] h-300 bg-white mt-10 py-15 px-30 rounded-10 overflow-y-scroll  border-solid border-[4px] border-[#e5e5e5] z-10">
                   {cityCode.map((item) => {
                     const cityName = Object.keys(item)[0];
                     const cityNameCode = item[cityName];
@@ -213,26 +211,26 @@ function SchoolInfo() {
 
             {/* 학교명 입력 인풋 */}
             <input
-              className="w-400 h-60 px-15 py-4 mr-10 rounded-10 border-solid border-[4px] border-gray-600"
+              className="w-400 mobile:w-[100%] h-60 px-15 py-4 mr-10 mobile:mb-20 rounded-10 border-solid border-[4px] border-gray-600"
               onChange={handleInput}
               placeholder="학교명을 입력해주세요"
               onKeyPress={onSchoolSearchKeyPress}
             />
             {/* 학교명 검색 버튼 */}
             <button
-              className="flex items-center justify-center w-200 h-60 px-20 py-10 bg-[#f0541e] hover:bg-[#f0241e] text-white rounded-10 border-solid border-[4px] border-gray-600"
+              className="flex items-center justify-center w-200 mobile:w-[100%] h-60 px-20 py-10 bg-[#f0541e] hover:bg-[#f0241e] text-white rounded-10 border-solid border-[4px] border-gray-600"
               onClick={handleSchoolSearchButton}
             >
               <img src={btnText1} alt="학교 검색" />
             </button>
           </div>
           {/* 학교 검색 결과 */}
-          <div className="mt-30 ">
+          <div className="mt-30 w-[100%]">
             <div className="flex items-center">
               {searchSchoolBtnClicked && typeof schoolData === "object" && (
-                <div className={`relative custom-select ${isSchoolOpen ? "open" : ""}`} ref={selectSchoolRef}>
+                <div className={`relative custom-select ${isSchoolOpen ? "open" : ""} w-[100%]`} ref={selectSchoolRef}>
                   <div
-                    className={`relative flex justify-start items-center w-820 h-60 px-10 py-4 mr-10 bg-white rounded-10 border-solid border-[4px] border-gray-600 ${
+                    className={`relative flex justify-start items-center w-820 mobile:w-[100%] h-60 px-10 py-4 mr-10 bg-white rounded-10 border-solid border-[4px] border-gray-600 ${
                       numberOfSchools !== 0 && `cursor-pointer`
                     }`}
                     onClick={handleToggleSchoolDropdown}
@@ -278,9 +276,9 @@ function SchoolInfo() {
           </div>
         </div>
 
-        <div className="flex flex-col items-center mt-150 p-120 bg-[#f2f2f2] rounded-50">
-          <h2 className="mb-60">
-            <img src={subTitle2} alt="날짜를 선택해 주세요" />
+        <div className="flex flex-col items-center mt-150 mobile:mt-60 p-120 mobile:py-60 mobile:px-30 bg-[#f2f2f2] rounded-50">
+          <h2 className="flex justify-center mb-60">
+            <img className="mobile:w-[80%]" src={subTitle2} alt="날짜를 선택해 주세요" />
           </h2>
           <DatePicker
             selected={startDate}
@@ -292,9 +290,9 @@ function SchoolInfo() {
         </div>
 
         {/* 검색 버튼 */}
-        <div className="flex justify-center items-center my-100 ">
+        <div className="flex justify-center items-center my-100 mobile:my-60">
           <button
-            className="flex items-center justify-center w-200 h-60 px-20 py-10 bg-[#f0541e] hover:bg-[#ff341e] text-white rounded-10 border-solid border-[4px] border-gray-600"
+            className="flex items-center justify-center w-200 mobile:w-[100%] h-60 px-20 py-10 bg-[#f0541e] hover:bg-[#ff341e] text-white rounded-10 border-solid border-[4px] border-gray-600"
             onClick={handleMealSearchButton}
           >
             <img src={btnText2} alt="급식 검색하기" />
@@ -302,7 +300,7 @@ function SchoolInfo() {
         </div>
 
         {/* 급식정보 */}
-        <div className="flex flex-wrap justify-center mb-200">
+        <div className="flex flex-wrap justify-center mb-200 mobile:mb-100">
           {typeof mainData === "object"
             ? mainData.map((item, index) => (
                 <div key={index} className="min-w-240 rounded-50 bg-[#f2f2f2] hover:bg-[#eee]  py-30 px-30 mx-10 mb-40">
