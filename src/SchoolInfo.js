@@ -23,6 +23,7 @@ function SchoolInfo() {
   const [schoolData, setSchoolData] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
   const [numberOfSchools, setNumberOfSchools] = useState(0);
+  const [searchSchoolList, setSearchSchoolList] = useState(`학교를 선택해주세요.(${numberOfSchools})`);
   const [mainData, setMainData] = useState([]);
   const [searchDateString, setSearchDateString] = useState();
   const cityCode = [
@@ -83,51 +84,68 @@ function SchoolInfo() {
     setSchoolName(schoolName);
     setSchoolNameCode(schoolcode);
     setIsSchoolOpen(false);
+    setSearchSchoolList(schoolName);
   };
 
   const handleInput = (e) => {
     setSchoolNameInput(e.target.value);
   };
 
-  const handleCitySearchButton = () => {
-    cityName.length === 0 || schoolNameInput.length === 0
-      ? alert("지역 또는 학교명을 입력해주세요.")
-      : axios
-          .get(
-            `https://open.neis.go.kr/hub/schoolInfo?KEY=${process.env.REACT_APP_API_KEY}&Type=json&pIndex=1&pSize=100&ATPT_OFCDC_SC_CODE=${cityNameCode}&SCHUL_NM=${schoolNameInput}`
-          )
-          .then((response) => {
-            const checkIncludeSchoolName = response.data.hasOwnProperty("schoolInfo")
-              ? response.data.schoolInfo[1].row.filter((item) => {
-                  return item.SCHUL_NM.includes(schoolNameInput);
-                })
-              : "";
-            setNumberOfSchools(checkIncludeSchoolName.length);
-            setSchoolData(checkIncludeSchoolName.length === 0 ? [] : checkIncludeSchoolName);
-          })
-          .catch((error) => {
-            console.log(`error : ${error}`);
-          });
+  const handleSchoolSearchButton = () => {
+    if (cityName.length === 0 || schoolNameInput.length === 0) {
+      alert("지역과 학교명을 입력해주세요.");
+    } else {
+      axios
+        .get(
+          `https://open.neis.go.kr/hub/schoolInfo?KEY=${process.env.REACT_APP_API_KEY}&Type=json&pIndex=1&pSize=100&ATPT_OFCDC_SC_CODE=${cityNameCode}&SCHUL_NM=${schoolNameInput}`
+        )
+        .then((response) => {
+          const checkIncludeSchoolName = response.data.hasOwnProperty("schoolInfo")
+            ? response.data.schoolInfo[1].row.filter((item) => {
+                return item.SCHUL_NM.includes(schoolNameInput);
+              })
+            : "";
+          setNumberOfSchools(checkIncludeSchoolName.length);
+          setSchoolData(checkIncludeSchoolName.length === 0 ? [] : checkIncludeSchoolName);
 
-    cityName !== "" && schoolNameInput.length !== 0 && setSearchSchoolBtnClicked(true);
+          if (checkIncludeSchoolName.length >= 0) {
+            setSearchSchoolList(`학교를 선택해주세요.(${checkIncludeSchoolName.length})`);
+          }
+        })
+        .catch((error) => {
+          console.log(`error : ${error}`);
+        });
+
+      cityName.length !== 0 && schoolNameInput.length !== 0 && setSearchSchoolBtnClicked(true);
+    }
     // cityName === "" && setSearchSchoolBtnClicked(false);
     // schoolNameInput.length === 0 && setSearchSchoolBtnClicked(false);
   };
 
-  const handleSchoolSearchButton = () => {
-    axios
-      .get(
-        `https://open.neis.go.kr/hub/mealServiceDietInfo?KEY=${process.env.REACT_APP_API_KEY}&Type=json&pIndex=1&pSize=100&ATPT_OFCDC_SC_CODE=B10&SD_SCHUL_CODE=${schoolNameCode}&MLSV_YMD=${searchDateString}`
-      )
-      .then((response) => {
-        response.data.hasOwnProperty("mealServiceDietInfo")
-          ? setMainData(response.data.mealServiceDietInfo[1].row)
-          : setMainData("검색 결과가 없습니다.");
-      })
-      .catch((error) => {
-        console.log(error);
-        setMainData("검색 결과가 없습니다.");
-      });
+  const onSchoolSearchKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSchoolSearchButton();
+    }
+  };
+
+  const handleMealSearchButton = () => {
+    if (!schoolName) {
+      alert("학교를 선택해주세요.");
+    } else {
+      axios
+        .get(
+          `https://open.neis.go.kr/hub/mealServiceDietInfo?KEY=${process.env.REACT_APP_API_KEY}&Type=json&pIndex=1&pSize=100&ATPT_OFCDC_SC_CODE=B10&SD_SCHUL_CODE=${schoolNameCode}&MLSV_YMD=${searchDateString}`
+        )
+        .then((response) => {
+          response.data.hasOwnProperty("mealServiceDietInfo")
+            ? setMainData(response.data.mealServiceDietInfo[1].row)
+            : setMainData("검색 결과가 없습니다.");
+        })
+        .catch((error) => {
+          console.log(error);
+          setMainData("검색 결과가 없습니다.");
+        });
+    }
   };
 
   const dateToString = (date) => {
@@ -198,11 +216,12 @@ function SchoolInfo() {
               className="w-400 h-60 px-15 py-4 mr-10 rounded-10 border-solid border-[4px] border-gray-600"
               onChange={handleInput}
               placeholder="학교명을 입력해주세요"
+              onKeyPress={onSchoolSearchKeyPress}
             />
             {/* 학교명 검색 버튼 */}
             <button
               className="flex items-center justify-center w-200 h-60 px-20 py-10 bg-[#f0541e] hover:bg-[#f0241e] text-white rounded-10 border-solid border-[4px] border-gray-600"
-              onClick={handleCitySearchButton}
+              onClick={handleSchoolSearchButton}
             >
               <img src={btnText1} alt="학교 검색" />
             </button>
@@ -213,31 +232,30 @@ function SchoolInfo() {
               {searchSchoolBtnClicked && typeof schoolData === "object" && (
                 <div className={`relative custom-select ${isSchoolOpen ? "open" : ""}`} ref={selectSchoolRef}>
                   <div
-                    className="relative flex justify-start items-center w-820 h-60 px-10 py-4 mr-10 bg-white rounded-10 border-solid border-[4px] border-gray-600"
+                    className={`relative flex justify-start items-center w-820 h-60 px-10 py-4 mr-10 bg-white rounded-10 border-solid border-[4px] border-gray-600 ${
+                      numberOfSchools !== 0 && `cursor-pointer`
+                    }`}
                     onClick={handleToggleSchoolDropdown}
                   >
-                    {/* 230703: 학교 이름을 선택하고 재검색하면 바뀌지 않음 ㅜㅜ */}
-                    {schoolName && schoolData.length === 0
-                      ? `학교를 선택해주세요.(${numberOfSchools})`
-                      : schoolName
-                      ? schoolName
-                      : `학교를 선택해주세요.(${numberOfSchools})`}
-                    <span className="absolute right-[10px] top-[18px]">
-                      <svg
-                        className={`scale-75 ${!isSchoolOpen && `rotate-180`}`}
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="17px"
-                        height="17px"
-                      >
-                        <path
-                          fill="rgb(40, 40, 40)"
-                          d="M5.567,2.367 C6.672,0.155 9.828,0.155 10.933,2.367 L16.079,12.658 C17.077,14.653 15.626,17.000 13.396,17.000 L3.104,17.000 C0.874,17.000 -0.577,14.653 0.421,12.658 L5.567,2.367 Z"
-                        />
-                      </svg>
-                    </span>
+                    {searchSchoolList}
+                    {numberOfSchools !== 0 && (
+                      <span className="absolute right-[10px] top-[18px]">
+                        <svg
+                          className={`scale-75 ${!isSchoolOpen && `rotate-180`}`}
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="17px"
+                          height="17px"
+                        >
+                          <path
+                            fill="rgb(40, 40, 40)"
+                            d="M5.567,2.367 C6.672,0.155 9.828,0.155 10.933,2.367 L16.079,12.658 C17.077,14.653 15.626,17.000 13.396,17.000 L3.104,17.000 C0.874,17.000 -0.577,14.653 0.421,12.658 L5.567,2.367 Z"
+                          />
+                        </svg>
+                      </span>
+                    )}
                   </div>
                   {isSchoolOpen && (
-                    <ul className="absolute top-[50px] left-0 w-[calc(100%-10px)] h-300 bg-white mt-10 px-30 py-15 rounded-10 overflow-y-scroll border-solid border-[4px] border-[#e5e5e5] z-10">
+                    <ul className="absolute top-[50px] left-0 w-[calc(100%-10px)] max-h-[300px] bg-white mt-10 px-30 py-15 rounded-10 overflow-y-scroll border-solid border-[4px] border-[#e5e5e5] z-10">
                       {schoolData.map((item) => {
                         const schoolName = item.SCHUL_NM;
                         const schoolNameCode = item.SD_SCHUL_CODE;
@@ -277,7 +295,7 @@ function SchoolInfo() {
         <div className="flex justify-center items-center my-100 ">
           <button
             className="flex items-center justify-center w-200 h-60 px-20 py-10 bg-[#f0541e] hover:bg-[#ff341e] text-white rounded-10 border-solid border-[4px] border-gray-600"
-            onClick={handleSchoolSearchButton}
+            onClick={handleMealSearchButton}
           >
             <img src={btnText2} alt="급식 검색하기" />
           </button>
@@ -296,7 +314,7 @@ function SchoolInfo() {
                   </p>
                 </div>
               ))
-            : typeof mainData === "string" && <p className="mb-200">{`${mainData}`}</p>}
+            : typeof mainData === "string" && <p>{`${mainData}`}</p>}
         </div>
       </div>
     </div>
