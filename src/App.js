@@ -1,19 +1,22 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React from "react";
+import { Provider } from "react-redux";
+import store from "./store";
 import SchoolInfo from "./SchoolInfo";
+import SchoolSearch from "./SearchSchool";
 import Main from "./Main";
 import "./index.css";
 
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
+      <Provider store={store}>
         <Main />
-        <Routes>
-          <Route path="/" element={<SchoolInfo />}></Route>
-        </Routes>
-      </BrowserRouter>
+        <SchoolSearch />
+        <SchoolInfo />
+      </Provider>
     </div>
   );
+  document.getElementById("root");
 }
 
 export default App;
