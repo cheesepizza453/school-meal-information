@@ -2,10 +2,10 @@ import { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { setSchoolName, setSchoolNameCode } from "./slice";
 import axios from "axios";
-import parse from "html-react-parser";
 import "react-datepicker/dist/react-datepicker.css";
 import subTitle1 from "./img/search_title1.png";
 import btnText1 from "./img/search_btn1.png";
+import { ReactComponent as SelectArrow } from "./img/select_arrow.svg";
 import "./index.css";
 
 function SearchSchool() {
@@ -17,8 +17,6 @@ function SearchSchool() {
   const [cityName, setCityName] = useState("");
   const [cityNameCode, setCityNameCode] = useState("");
   const [isSchoolOpen, setIsSchoolOpen] = useState(false);
-  //   const [schoolName, setSchoolName] = useState("");
-  //   const [schoolNameCode, setSchoolNameCode] = useState("");
   const [schoolNameInput, setSchoolNameInput] = useState("");
   const [searchSchoolBtnClicked, setSearchSchoolBtnClicked] = useState(false);
   const [schoolData, setSchoolData] = useState([]);
@@ -122,115 +120,99 @@ function SearchSchool() {
   };
 
   return (
-    <div className="flex flex-col items-center rounded-50 p-120 mobile:py-60 mobile:px-30 bg-[#f2f2f2]">
-      <h2 className="flex justify-center mb-60">
-        <img className="mobile:w-[80%]" src={subTitle1} alt="지역과 학교를 검색해주세요" />
-      </h2>
-      {/* 지역 선택 셀렉트박스 */}
-      <div className="flex mobile:flex-col mobile:w-[100%]">
-        <div className={`relative ${isCityOpen ? "open" : ""}`} ref={selectCityRef}>
-          <div
-            className="relative flex justify-start items-center w-200 mobile:w-[100%] h-60 px-10 py-4 mr-10 mobile:mb-20 bg-white rounded-10 border-solid border-[4px] border-gray-600"
-            onClick={handleToggleCityDropdown}
-          >
-            {cityName || "지역을 선택해주세요."}
-            <span className="absolute right-[10px] top-[18px]">
-              <svg
-                className={`scale-75 ${!isCityOpen && `rotate-180`}`}
-                xmlns="http://www.w3.org/2000/svg"
-                width="17px"
-                height="17px"
-              >
-                <path
-                  fill="rgb(40, 40, 40)"
-                  d="M5.567,2.367 C6.672,0.155 9.828,0.155 10.933,2.367 L16.079,12.658 C17.077,14.653 15.626,17.000 13.396,17.000 L3.104,17.000 C0.874,17.000 -0.577,14.653 0.421,12.658 L5.567,2.367 Z"
-                />
-              </svg>
-            </span>
-          </div>
-          {isCityOpen && (
-            <ul className="absolute top-[50px] left-0 w-[calc(100%-10px)] mobile:w-[100%] h-300 bg-white mt-10 py-15 px-30 rounded-10 overflow-y-scroll  border-solid border-[4px] border-[#e5e5e5] z-10">
-              {cityCode.map((item) => {
-                const cityName = Object.keys(item)[0];
-                const cityNameCode = item[cityName];
-
-                return (
-                  <li
-                    key={cityNameCode}
-                    className="py-8 cursor-pointer hover:text-[#f0541e]"
-                    onClick={() => handleCitySelect(cityName, cityNameCode)}
-                  >
-                    {cityName}
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </div>
-
-        {/* 학교명 입력 인풋 */}
-        <input
-          className="w-400 mobile:w-[100%] h-60 px-15 py-4 mr-10 mobile:mb-20 rounded-10 border-solid border-[4px] border-gray-600"
-          onChange={handleInput}
-          placeholder="학교명을 입력해주세요"
-          onKeyPress={onSchoolSearchKeyPress}
-        />
-        {/* 학교명 검색 버튼 */}
-        <button
-          className="flex items-center justify-center w-200 mobile:w-[100%] h-60 px-20 py-10 bg-[#f0541e] hover:bg-[#f0241e] text-white rounded-10 border-solid border-[4px] border-gray-600"
-          onClick={handleSchoolSearchButton}
-        >
-          <img src={btnText1} alt="학교 검색" />
-        </button>
-      </div>
-      {/* 학교 검색 결과 */}
-      <div className="mt-30 mobile:w-[100%]">
-        <div className="flex items-center">
-          {searchSchoolBtnClicked && typeof schoolData === "object" && (
-            <div className={`relative ${isSchoolOpen ? "open" : ""} mobile:w-[100%]`} ref={selectSchoolRef}>
+    <div className="flex flex-col items-center mt-50">
+      <div className="w-[1280px] mobile:w-[90vw]">
+        <div className="flex flex-col items-center rounded-50 p-120 mobile:py-60 mobile:px-30 bg-[#f2f2f2]">
+          <h2 className="flex justify-center mb-60">
+            <img className="mobile:w-[80%]" src={subTitle1} alt="지역과 학교를 검색해주세요" />
+          </h2>
+          {/* 지역 선택 셀렉트박스 */}
+          <div className="flex mobile:flex-col mobile:w-[100%]">
+            <div className="relative" ref={selectCityRef}>
               <div
-                className={`relative flex justify-start items-center w-820 mobile:w-[100%] h-60 px-10 py-4 mr-10 bg-white rounded-10 border-solid border-[4px] border-gray-600 ${
-                  numberOfSchools !== 0 && `cursor-pointer`
-                }`}
-                onClick={handleToggleSchoolDropdown}
+                className="relative flex justify-start items-center w-200 mobile:w-[100%] h-60 px-10 py-4 mr-10 mobile:mb-20 bg-white rounded-10 border-solid border-[4px] border-gray-600"
+                onClick={handleToggleCityDropdown}
               >
-                {searchSchoolList}
-                {numberOfSchools !== 0 && (
-                  <span className="absolute right-[10px] top-[18px]">
-                    <svg
-                      className={`scale-75 ${!isSchoolOpen && `rotate-180`}`}
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="17px"
-                      height="17px"
-                    >
-                      <path
-                        fill="rgb(40, 40, 40)"
-                        d="M5.567,2.367 C6.672,0.155 9.828,0.155 10.933,2.367 L16.079,12.658 C17.077,14.653 15.626,17.000 13.396,17.000 L3.104,17.000 C0.874,17.000 -0.577,14.653 0.421,12.658 L5.567,2.367 Z"
-                      />
-                    </svg>
-                  </span>
-                )}
+                {cityName || "지역을 선택해주세요."}
+                <span className="absolute right-[10px] top-[18px]">
+                  <SelectArrow className={`scale-75 ${!isCityOpen && `rotate-180`}`} />
+                </span>
               </div>
-              {isSchoolOpen && (
-                <ul className="absolute top-[50px] left-0 w-[calc(100%-10px)] max-h-[300px] bg-white mt-10 px-30 py-15 rounded-10 overflow-y-scroll border-solid border-[4px] border-[#e5e5e5] z-10">
-                  {schoolData.map((item) => {
-                    const schoolName = item.SCHUL_NM;
-                    const schoolNameCode = item.SD_SCHUL_CODE;
+              {isCityOpen && (
+                <ul className="absolute top-[50px] left-0 w-[calc(100%-10px)] mobile:w-[100%] h-300 bg-white mt-10 py-15 px-30 rounded-10 overflow-y-scroll  border-solid border-[4px] border-[#e5e5e5] z-10">
+                  {cityCode.map((item) => {
+                    const cityName = Object.keys(item)[0];
+                    const cityNameCode = item[cityName];
 
                     return (
                       <li
-                        key={schoolNameCode}
+                        key={cityNameCode}
                         className="py-8 cursor-pointer hover:text-[#f0541e]"
-                        onClick={() => handleSchoolSelect(schoolName, schoolNameCode)}
+                        onClick={() => handleCitySelect(cityName, cityNameCode)}
                       >
-                        {schoolName}
+                        {cityName}
                       </li>
                     );
                   })}
                 </ul>
               )}
             </div>
-          )}
+
+            {/* 학교명 입력 인풋 */}
+            <input
+              className="w-400 mobile:w-[100%] h-60 px-15 py-4 mr-10 mobile:mb-20 rounded-10 border-solid border-[4px] border-gray-600"
+              onChange={handleInput}
+              placeholder="학교명을 입력해주세요"
+              onKeyPress={onSchoolSearchKeyPress}
+            />
+            {/* 학교명 검색 버튼 */}
+            <button
+              className="flex items-center justify-center w-200 mobile:w-[100%] h-60 px-20 py-10 bg-[#f0541e] hover:bg-[#f0241e] text-white rounded-10 border-solid border-[4px] border-gray-600"
+              onClick={handleSchoolSearchButton}
+            >
+              <img src={btnText1} alt="학교 검색" />
+            </button>
+          </div>
+          {/* 학교 검색 결과 */}
+          <div className="mt-30 mobile:w-[100%]">
+            <div className="flex items-center">
+              {searchSchoolBtnClicked && typeof schoolData === "object" && (
+                <div className={`relative ${isSchoolOpen ? "open" : ""} mobile:w-[100%]`} ref={selectSchoolRef}>
+                  <div
+                    className={`relative flex justify-start items-center w-820 mobile:w-[100%] h-60 px-10 py-4 mr-10 bg-white rounded-10 border-solid border-[4px] border-gray-600 ${
+                      numberOfSchools !== 0 && `cursor-pointer`
+                    }`}
+                    onClick={handleToggleSchoolDropdown}
+                  >
+                    {searchSchoolList}
+                    {numberOfSchools !== 0 && (
+                      <span className="absolute right-[10px] top-[18px]">
+                        <SelectArrow className={`scale-75 ${!isSchoolOpen && `rotate-180`}`} />
+                      </span>
+                    )}
+                  </div>
+                  {isSchoolOpen && (
+                    <ul className="absolute top-[50px] left-0 w-[calc(100%-10px)] max-h-[300px] bg-white mt-10 px-30 py-15 rounded-10 overflow-y-scroll border-solid border-[4px] border-[#e5e5e5] z-10">
+                      {schoolData.map((item) => {
+                        const schoolName = item.SCHUL_NM;
+                        const schoolNameCode = item.SD_SCHUL_CODE;
+
+                        return (
+                          <li
+                            key={schoolNameCode}
+                            className="py-8 cursor-pointer hover:text-[#f0541e]"
+                            onClick={() => handleSchoolSelect(schoolName, schoolNameCode)}
+                          >
+                            {schoolName}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
