@@ -2,6 +2,7 @@
   "name": "school-meals",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://miri-portfolio.s3-website.ap-northeast-2.amazonaws.com/",
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/jest-dom": "^5.16.5",
@@ -46,5 +47,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^11.0.0"
   }
 }

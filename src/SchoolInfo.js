@@ -3,8 +3,6 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import parse from "html-react-parser";
 import DatePicker from "react-datepicker";
-import subTitle2 from "./img/search_title2.png";
-import btnText2 from "./img/searh_btn2.png";
 import "./index.css";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -59,7 +57,7 @@ function SchoolInfo() {
       <div className="w-[1280px] mobile:w-[90vw]">
         <div className="flex flex-col items-center mt-150 mobile:mt-60 p-120 mobile:py-60 mobile:px-30 bg-[#f2f2f2] rounded-50">
           <h2 className="flex justify-center mb-60">
-            <img className="mobile:w-[80%]" src={subTitle2} alt="날짜를 선택해 주세요" />
+            <img className="mobile:w-[80%]" src={"img/search_title2.png"} alt="날짜를 선택해 주세요" />
           </h2>
           <DatePicker
             selected={startDate}
@@ -76,7 +74,7 @@ function SchoolInfo() {
             className="flex items-center justify-center w-200 mobile:w-[100%] h-60 px-20 py-10 bg-[#f0541e] hover:bg-[#ff341e] text-white rounded-10 border-solid border-[4px] border-gray-600"
             onClick={handleMealSearchButton}
           >
-            <img src={btnText2} alt="급식 검색하기" />
+            <img src={process.env.PUBLIC_URL + "img/searh_btn2.png"} alt="급식 검색하기" />
           </button>
         </div>
 

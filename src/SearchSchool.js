@@ -3,9 +3,6 @@ import { useDispatch } from "react-redux";
 import { setSchoolName, setSchoolNameCode } from "./slice";
 import axios from "axios";
 import "react-datepicker/dist/react-datepicker.css";
-import subTitle1 from "./img/search_title1.png";
-import btnText1 from "./img/search_btn1.png";
-import { ReactComponent as SelectArrow } from "./img/select_arrow.svg";
 import "./index.css";
 
 function SearchSchool() {
@@ -124,7 +121,11 @@ function SearchSchool() {
       <div className="w-[1280px] mobile:w-[90vw]">
         <div className="flex flex-col items-center rounded-50 p-120 mobile:py-60 mobile:px-30 bg-[#f2f2f2]">
           <h2 className="flex justify-center mb-60">
-            <img className="mobile:w-[80%]" src={subTitle1} alt="지역과 학교를 검색해주세요" />
+            <img
+              className="mobile:w-[80%]"
+              src={process.env.PUBLIC_URL + "img/search_title1.png"}
+              alt="지역과 학교를 검색해주세요"
+            />
           </h2>
           {/* 지역 선택 셀렉트박스 */}
           <div className="flex mobile:flex-col mobile:w-[100%]">
@@ -135,7 +136,11 @@ function SearchSchool() {
               >
                 {cityName || "지역을 선택해주세요."}
                 <span className="absolute right-[10px] top-[18px]">
-                  <SelectArrow className={`scale-75 ${!isCityOpen && `rotate-180`}`} />
+                  <img
+                    className={`scale-75 ${!isCityOpen && `rotate-180`}`}
+                    src={process.env.PUBLIC_URL + "img/select_arrow.svg"}
+                    alt="화살표"
+                  />
                 </span>
               </div>
               {isCityOpen && (
@@ -170,7 +175,7 @@ function SearchSchool() {
               className="flex items-center justify-center w-200 mobile:w-[100%] h-60 px-20 py-10 bg-[#f0541e] hover:bg-[#f0241e] text-white rounded-10 border-solid border-[4px] border-gray-600"
               onClick={handleSchoolSearchButton}
             >
-              <img src={btnText1} alt="학교 검색" />
+              <img src={process.env.PUBLIC_URL + "img/search_btn1.png"} alt="학교 검색" />
             </button>
           </div>
           {/* 학교 검색 결과 */}
@@ -187,7 +192,11 @@ function SearchSchool() {
                     {searchSchoolList}
                     {numberOfSchools !== 0 && (
                       <span className="absolute right-[10px] top-[18px]">
-                        <SelectArrow className={`scale-75 ${!isSchoolOpen && `rotate-180`}`} />
+                        <img
+                          className={`scale-75 ${!isSchoolOpen && `rotate-180`}`}
+                          src={process.env.PUBLIC_URL + "img/select_arrow.svg"}
+                          alt="화살표"
+                        />
                       </span>
                     )}
                   </div>
