@@ -14,11 +14,9 @@ HTML, CSS, JavaScript, React, Axios, Redux toolkit, Tailwind, Photoshop <br/><br
 
 <br/><br/>
 
-<img src="https://github.com/cheesepizza453/nenia-clone/assets/71148177/32bf3c18-5f1d-4356-9021-f8475e1544b6"  width="400" height="500"/>
-<br/> 지역 선택 및 학교 검색
-<br/><br/><br/><br/><br/><br/><br/><br/>
-<img src="https://github.com/cheesepizza453/nenia-clone/assets/71148177/3cce72cb-df42-454e-ab67-847f829a8b3a"  width="400" height="500"/>
-<br/> 날짜 선택 및 결과 노출
+<img src="https://github.com/cheesepizza453/school-meal-information/assets/71148177/ae499aed-3cb7-48c8-9ae1-3e2baa239505"  width="900" height="430"/>
+<br/> 1. 지역 선택 및 학교 검색
+<br/> 2. 날짜 선택 및 결과 노출
 <br/>
 
 <br/><br/>
