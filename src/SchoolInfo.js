@@ -5,6 +5,8 @@ import parse from "html-react-parser";
 import DatePicker from "react-datepicker";
 import "./index.css";
 import "react-datepicker/dist/react-datepicker.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCopy } from "@fortawesome/free-regular-svg-icons";
 
 function SchoolInfo() {
   const [startDate, setStartDate] = useState(new Date());
@@ -40,6 +42,17 @@ function SchoolInfo() {
 
   const dateToString = (date) => {
     return date.getFullYear().toString().slice(2, 4) + (date.getMonth() + 1).toString().padStart(2, "0");
+  };
+
+  const handleCopyClipBoard = async (text) => {
+    const textToCopy = text.filter((item, index) => index % 2 === 0).join("");
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+
+      alert("메뉴가 복사되었습니다.");
+    } catch (error) {
+      alert("복사에 실패했습니다.");
+    }
   };
 
   const CustomDateInput = forwardRef(({ value, onClick }, ref) => (
@@ -82,13 +95,24 @@ function SchoolInfo() {
         <div className="flex flex-wrap justify-center mb-200 mobile:mb-100">
           {typeof mainData === "object"
             ? mainData.map((item, index) => (
-                <div key={index} className="min-w-240 rounded-50 bg-[#f2f2f2] hover:bg-[#eee] py-30 px-30 mx-10 mb-40">
+                <div
+                  key={index}
+                  className="relative min-w-240 rounded-40 bg-[#f2f2f2] hover:bg-[#eee] pt-30 pb-50 px-30 mx-10 mb-40"
+                >
                   <p className="rounded-60 bg-white px-10 py-5 text-center font-bold mb-15 text-16">
                     {item.MLSV_FROM_YMD}
                   </p>
                   <p className="leading-[1.6] text-14" key={item.id}>
                     {parse(item.DDISH_NM.replace(/\([^)]+\)/g, ""))}
                   </p>
+                  <button
+                    className="absolute bottom-[20px] right-[20px]"
+                    onClick={() => {
+                      handleCopyClipBoard(parse(item.DDISH_NM.replace(/\([^)]+\)/g, "")));
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faCopy} className="hover:text-[#f0541e]" />
+                  </button>
                 </div>
               ))
             : typeof mainData === "string" && <p>{`${mainData}`}</p>}
